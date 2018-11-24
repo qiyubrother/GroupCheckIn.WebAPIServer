@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>选择房间并生成入住二维码（外网）</title>
+		<link href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.css" rel="stylesheet">
+		<style>
+			.room{
+				width:100px;
+				height: 100px;
+				border:1px solid blue;
+			}
+			.room-selected{
+				width:100px;
+				height: 100px;
+				border:1px solid red;
+				background-color:lightblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="col col-lg-3"></div>
+			<div class="col col-lg-6">
+			<p></p>
+			<h2>选择房间并生成入住二维码（外网）</h2>
+			<hr/>
+			<form id="frm">
+			  <div class="form-group">
+			    <label for="ReservationNo">预定号</label>
+			    <input type="text" class="form-control" id="reservationNo" placeholder="预定号" value="CC201809111001" readonly="readonly">
+			  </div>
+				
+			  <a class="btn btn-default room"><span>标间</span><br>403房间</a>
+			  <a class="btn btn-default room"><span>套房</span><br>503房间</a>
+			  <a class="btn btn-default room"><span>单间</span><br>203房间</a>
+			  <a class="btn btn-default room-selected"><span>标间</span><br>502房间</a>
+			  <a class="btn btn-default room"><span>标间</span><br>413房间</a>
+			  <p></p>
+
+			  <p></p>
+			  <div class="text-center">
+			  	<img src="img/qrcode.png" />
+				<p>请打印二维码或将此二维码保存至手机端。您将通过此二维码在酒店的自助机端办理入住。</p>
+			  </div>
+			  
+			</form>
+			</div>
+			<div class="col col-lg-3"></div>
+		</div>
+<!--  通讯模块开始 -->
+		<div id='output' />
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	$(function(){
+
+		var selectRoomInput = 
+		{
+			ReservationNo: "CC201809111001",
+			HotelId: "123abcd",
+		};
+		var jsonString = JSON.stringify(selectRoomInput);
+        $.ajax({
+            type: 'POST',
+            url: 'https://localhost:44314/api/GetReservationDetail',
+            data: jsonString,
+            contentType: 'application/json; charset=utf-8',
+            //cache:false,
+            dataType: 'json',
+            success: function (data) {
+				//alert('successful');
+				var json = JSON.parse(data);
+				//console.log(data.ErrorCode);
+				alert(json.ErrorMessage);
+				//alert(json["ReservationRooms"].length);
+				alert(JSON.stringify(json));
+            },
+            error: function (msg) {
+                alert(msg.responseText);
+                console.log(msg)
+            }
+        });
+	})
+</script>
+<!--  通讯模块结束 -->
+	</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>预定确认（外网）</title>
+		<link href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.css" rel="stylesheet">
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<!--  通讯模块开始 -->
+<script>
+	$(function(){
+		// 发送验证码到手机
+		$("#btn-send-verification-code").click(function(){
+			var sendVerificationCode = 
+			{
+				ReservationNo: "CC201809111001",
+				HotelId: "123abcd",
+				Mobile:"13240137763"
+			};
+			var jsonString = JSON.stringify(sendVerificationCode);
+            $.ajax({
+                type: 'POST',
+                url: 'https://localhost:44314/api/SendVerificationCode',
+                data: jsonString,
+                contentType: 'application/json; charset=utf-8',
+                //cache:false,
+                dataType: 'json',
+                success: function (data) {
+					//alert('successful');
+					var json = JSON.parse(data);
+					//console.log(data.ErrorCode);
+					alert(json.ErrorMessage);
+                },
+                error: function (msg) {
+                    alert(msg.responseText);
+                    console.log(msg)
+                }
+            });
+		});
+		
+		// 验证验证码
+		$("#btn-verification").click(function(){
+			var authenticationsInput = 
+			{
+				ReservationNo: "CC201809111001",
+				HotelId: "123abcd",
+				Mobile:"13240137763",
+				VerificationCode:"214671"
+			};
+			var jsonString = JSON.stringify(authenticationsInput);
+            $.ajax({
+                type: 'POST',
+                url: 'https://localhost:44314/api/Authentications',
+                data: jsonString,
+                contentType: 'application/json; charset=utf-8',
+                //cache:false,
+                dataType: 'json',
+                success: function (data) {
+					//alert('successful');
+					var json = JSON.parse(data);
+					//console.log(data.ErrorCode);
+					alert(json.ErrorMessage);
+                },
+                error: function (msg) {
+                    alert(msg.responseText);
+                    console.log(msg)
+                }
+            });
+		});
+});
+</script>
+<!--  通讯模块结束 -->
+	</head>
+	<body>
+		<div class="container">
+			<div class="col col-lg-3"></div>
+			<div class="col col-lg-6">
+				<p></p>
+				<h2>预定确认 （外网）</h2>
+				<hr/>
+				<form id="frm">
+				  <div class="form-group">
+				    <label for="ReservationNo">预定号</label>
+				    <input type="text" class="form-control" id="reservationNo" placeholder="预定号" value="CC201809111001" readonly="readonly">
+				  </div>
+				  <div class="form-group">
+				    <label for="userName">预定人</label>
+				    <input type="text" class="form-control" id="userName" placeholder="预定人" readonly="readonly" value="Liu, zhenhua">
+				  </div>
+				  <div class="form-group">
+				    <label for="inDate">入住时间</label>
+				    <input type="text" class="form-control" id="inDate" placeholder="yyyy/mm/dd" readonly="readonly" value="2018/09/30">
+				  </div>
+				  <div class="form-group">
+				    <label for="mobile">请输入您的手机号码</label>
+				    <input type="mobile" class="form-control" id="mobile" placeholder="手机号码" value="13240137763" readonly="readonly">
+				    <button type="button" class="btn btn-default" id="btn-send-verification-code">发送验证码</button>
+				  </div>
+				  <div class="form-group">
+				    <label for="reservationNo">请输入验证码</label>
+				    <input type="text" class="form-control" id="verificationCode" placeholder="" value="214671">
+				  </div>
+				  <div class="text-center">
+				  	<button type="button" class="btn btn-default" id="btn-verification">验证</button>
+				  </div>
+				</form>
+			</div>
+			<div class="col col-lg-3"></div>
+		</div>
+		<div id='output' ></div>
+
+	</body>
+</html>
